@@ -9,11 +9,12 @@ const QuestionsSelect = (props) => {
   const [loading, setLoad] = useState(true);
 
   async function fetchData() {
-    const res = await fetch(getQuestions + "/error")
+    const res = await fetch(getQuestions)
     res
       .json()
       .then(res => {
         setQuestions(res)
+        props.setQuestionId(res[0].id)
         setLoad(false)
       })
   }
@@ -48,6 +49,7 @@ const QuestionsSelect2 = (props) => {
       .json()
       .then(res => {
         setQuestions(res)
+        props.setQuestionId(res[0].id)
         setLoad(false)
       })
   }
@@ -82,6 +84,7 @@ const QuestionsSelect3 = (props) => {
       .json()
       .then(res => {
         setQuestions(res)
+        props.setQuestionId(res[0].id)
         setLoad(false)
       })
   }
@@ -96,7 +99,7 @@ const QuestionsSelect3 = (props) => {
 
   const listItems = questions.map((element) => {
       return (
-        <option key={element.index} value={element.id}> {questions[1].value} </option>)
+        <option key={element.index} value={element.id}> {element.value} </option>)
   })
 
   return (
@@ -127,7 +130,7 @@ const AnswerForm = (props) => {
       </label>
       </div>
       <div className="App-button">
-      <input type="submit" value="Спросить" onClick={() => fetchData(props.setectedQuestionId)}/>
+      <input type="submit" value="Спросить" onClick={() => fetchData(props.selectedQuestionId)}/>
       </div>
     </div>
   )
@@ -137,7 +140,7 @@ const AnswerForm2 = (props) => {
   const [answer, setAnswer] = useState('test');
 
   async function fetchData(id) {
-    const res = await fetch(`http://localhost:8000/answer/1`)
+    const res = await fetch(`http://localhost:8000/answer/${id}`)
     res
       .json()
       .then(res => {
@@ -154,7 +157,34 @@ const AnswerForm2 = (props) => {
       </label>
       </div>
       <div className="App-button">
-      <input type="submit" value="Спросить" onClick={() => fetchData(props.setectedQuestionId)}/>
+      <input type="submit" value="Спросить" onClick={() => fetchData(props.selectedQuestionId)}/>
+      </div>
+    </div>
+  )
+}
+
+const AnswerForm3 = (props) => {
+  const [answer, setAnswer] = useState('test');
+
+  async function fetchData(id) {
+    const res = await fetch(`http://localhost:8000/answer/${id}`)
+    res
+      .json()
+      .then(res => {
+        console.log(res)
+        setAnswer(res.data)
+      })
+  }
+
+  return (
+    <div className="App-answer"> 
+     <div className="App-label">
+      <label>
+        {answer}
+      </label>
+      </div>
+      <div className="App-button">
+      <input type="submit" value="Спросить" onClick={() => fetchData(props.selectedQuestionId)}/>
       </div>
     </div>
   )
@@ -163,8 +193,9 @@ const AnswerForm2 = (props) => {
 
 
 function App() {
-  const [setectedQuestionId, setQuestionId] = useState();
-  const [setectedQuestionId2, setQuestionId2] = useState();
+  const [selectedQuestionId, setQuestionId] = useState();
+  const [selectedQuestionId2, setQuestionId2] = useState();
+  const [selectedQuestionId3, setQuestionId3] = useState();
 
   return (
     <div className="App">
@@ -172,19 +203,19 @@ function App() {
         <div className="App-select">
           <QuestionsSelect setQuestionId={setQuestionId}/>
         </div>
-        <AnswerForm setectedQuestionId={setectedQuestionId}/>
+        <AnswerForm selectedQuestionId={selectedQuestionId}/>
       </div>
       <div className="App-block-2" style={{marginTop: 50}}>
         <div className="App-select">
           <QuestionsSelect2 setQuestionId={setQuestionId2}/>
         </div>
-        <AnswerForm2 setectedQuestionId={setectedQuestionId2}/>
+        <AnswerForm2 selectedQuestionId={selectedQuestionId2}/>
       </div>
       <div className="App-block-3" style={{marginTop: 50}}>
         <div className="App-select">
-          <QuestionsSelect3 setQuestionId={setQuestionId2}/>
+          <QuestionsSelect3 setQuestionId={setQuestionId3}/>
         </div>
-        <AnswerForm setectedQuestionId={setectedQuestionId2}/>
+        <AnswerForm3 selectedQuestionId={selectedQuestionId3}/>
       </div>
     </div>
   );
